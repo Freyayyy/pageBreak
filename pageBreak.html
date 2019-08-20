@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>分页</title>
+<style>
+  *{margin: 0;padding: 0;}
+  #page-break{margin-top: 20px;margin-left: 20px;}
+  #page-break li{list-style: none;}
+  #page-break a{border: 1px solid #ddd; text-decoration: none;float: left;padding: 6px 12px;color: #337ab7;cursor: pointer}
+  #page-break a:hover{background-color: #eee;}
+  #page-break a .banclick{cursor: not-allowed;}
+  #page-break a .banclick{cursor: not-allowed;}
+  #page-break .active a{color: #fff;cursor: default;background-color: #337ab7;border-color: #337ab7;}
+  #page-break i{font-style: normal;color: #d44950;margin: 0px 4px;font-size: 12px;}
+</style>	
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+<div id="page-break">
+  <ul>
+    <li v-if="cur>1">
+      <a v-on:click="cur--,pageClick()">上一页</a>
+    </li>
+    <li v-if="cur==1">
+      <a class="banclick">上一页</a>
+    </li>
+    <li v-for="item in indexs" v-bind:class="{'active':cur==item}">
+      <a v-on:click="btnClick(item)">{{item}}</a>
+    </li>
+    <li v-if="cur!=all">
+      <a v-on:click="cur++,pageClick()">下一页</a>
+    </li>
+    <li v-if="cur==all">
+      <a class="banclick">下一页</a>
+    </li>
+    <li><a>共<i>{{all}}</i>页</a></li>
+  </ul>
+</div>
+
+<script>
+new Vue({
+  el:'#page-break',
+  data:{
+    cur:1,
+    all:20
+  },
+  watch: {
+        cur: function(oldValue , newValue){
+            console.log(arguments);
+        }
+    },    
+  methods:{
+    btnClick(num){//页码点击事件
+      if(num!=this.cur){
+        this.cur=num;
+      }
+    },
+    pageClick(){
+      console.log('当前是第'+this.cur+'页')
+    }
+  },
+    computed:{
+      indexs(){
+        var left=1;
+        var right=this.all;
+        var arr=[];
+        if(this.all>=7){
+          if(this.cur>4 && this.cur<this.all-3){
+            left=this.cur-3;
+            right=this.cur+3;
+          }else{
+            if(this.cur<=4){
+              left=1;
+              right=7;
+            }else{
+              left=this.all-6;
+              right=this.all;
+            }
+          }
+        }
+        while(left<=right){
+          arr.push(left);
+          left++;
+        }
+        return arr;
+      }
+    }
+  /*computed:{
+      indexs(){
+        var left=1;
+        var right=this.all;
+        var arr=[];
+        if(this.all>=6){
+          if(this.cur>4 && this.cur<this.all-2){
+            left=this.cur-2;
+            right=this.cur+3;
+          }else{
+            if(this.cur<=4){
+              left=1;
+              right=6;
+            }else{
+              left=this.all-5;
+              right=this.all;
+            }
+          }
+        }
+        while(left<=right){
+          arr.push(left);
+          left++;
+        }
+        return arr;
+      }
+    }*/
+
+  
+})
+</script>
+</body>
+</html>
+
